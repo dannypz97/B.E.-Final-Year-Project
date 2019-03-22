@@ -1,0 +1,22 @@
+label{
+  display: block;
+  text-align: center;
+}
+.dataset-select{
+  max-width: 30%;
+  margin: 0 auto;
+}
+
+.form{
+  text-align: center;
+  width: 50%;
+  margin: auto;
+  margin-top: 15%;
+  position: relative;
+}
+
+.submit-btn
+{
+  position: absolute;
+  left: 0px;
+}

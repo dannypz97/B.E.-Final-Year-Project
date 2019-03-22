@@ -1,0 +1,24 @@
+textarea{
+  max-width: 50%;
+}
+
+p{
+  color: grey;
+  font-size: 12px;
+}
+
+
+.badge-primary{
+  margin-left: 15px;
+}
+.btn-add{
+  float: left;
+  display: flex;
+  align-items: center;
+
+}
+.btn-submit{
+  float: left;
+  margin-left: 5px;
+  margin-top: 3px;
+}

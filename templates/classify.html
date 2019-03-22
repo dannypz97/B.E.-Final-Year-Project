@@ -1,0 +1,28 @@
+# extends "layout.html"
+
+# block head
+{{ super() }}
+<link rel="stylesheet" ref = "{{ url_for('static', filename = 'styles/index.css') }}" />
+# endblock
+
+# block body
+<h3>Question: {{question}}</h3>
+<div class="row  ">
+  # if missing_words|length > 0:
+  <div class="alert alert-warning" role="alert">
+    <ul>
+      # for word in missing_words:
+      <li>
+        {{word}} is not in vocabulary.
+      </li>
+      # endfor
+    </ul>
+  </div>
+  # endif
+</div>
+<br />
+<h3>Possible Tags</h3>
+# for item in possible_tags:
+{{ item[0] }} - {{ item[1]}}
+# endfor
+# endblock

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    # block head
+    <meta charset="utf-8">
+    <title>Semantic Question Classifier</title>
+    <link rel="stylesheet" href = "{{ url_for('static', filename = 'styles/all.min.css') }}" />
+    <link rel="stylesheet" href = "{{ url_for('static', filename = 'styles/bootstrap.min.css') }}" />
+    <script type=text/javascript src="{{  url_for('static', filename='js/jquery.js') }}" ></script>
+    # endblock
+  </head>
+  <body>
+    <div class="container">
+    # block body
+    # endblock
+    </div>
+    # block footer
+    <nav class="navbar fixed-bottom navbar-dark bg-dark">
+      <div class="btn-group">
+        <a href = "/question/add/"><button class="btn btn-success" type="button">Add Questions to Database</button></a>
+      </div>
+    </nav>
+    # endblock
+  </body>
+  <script type=text/javascript src="{{  url_for('static', filename='js/jquery.js') }}" ></script>
+</html>

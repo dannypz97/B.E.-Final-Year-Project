@@ -1,0 +1,20 @@
+# extends "layout.html"
+
+# block head
+{{ super() }}
+<link rel="stylesheet" href = "{{ url_for('static', filename = 'styles/index.css') }}" />
+<script type=text/javascript src="{{  url_for('static', filename='js/index.js') }}" ></script>
+# endblock
+
+# block body
+<label>Select Dataset: </label>
+<select class="form-control  dataset-select">
+  <option value="trec">TREC-6</option>
+  <option value="compiled">Compiled</option>
+</select>
+
+<form class="form" action="classify/" method="post">
+  <textarea class="form-control" type="text" name="question" placeholder="Enter question here..." rows="3" cols="80"></textarea>
+  <button type="submit" class="btn btn-primary mb-2 submit-btn">Submit</button>
+</form>
+# endblock

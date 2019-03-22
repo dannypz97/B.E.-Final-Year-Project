@@ -1,0 +1,52 @@
+# extends "layout.html"
+
+# block head
+{{ super() }}
+<link rel="stylesheet" href = "{{ url_for('static', filename = 'styles/add.css') }}" />
+<script type=text/javascript src="{{  url_for('static', filename='js/add.js') }}" ></script>
+# endblock
+
+# block body
+
+# if msg|length > 0:
+<ul>
+  # for line in msg:
+    <li>{{line}}</li>
+  # endfor
+</ul>
+# endif
+<h3>Add Questions</h3>
+<br />
+<form class="form" action="/question/add/" method="post">
+    <div class="question-block">
+      <label>Question:</label>
+      <textarea class="form-control" type="text" name="question" class="question" placeholder="Enter question here..." rows="3"></textarea>
+      <br>
+      <label>Tags</label>
+      <br>
+      <p>
+        After selecting or typing in a tag, press Enter to add tag. Click on tag label to delete tag.
+      </p>
+      <input type="text" id="tag-list" list="data-list" />
+
+      <datalist id="data-list">
+        #for tag in tags:
+        <option value= "{{ tag }}">
+          {{ tag|string() }}
+        </option>
+        #endfor
+      </datalist>
+      <br>
+      <div class="row chosen-tags">
+
+      </div>
+      <input type="text" class="selected-tags-hidden" name="tags" hidden/>
+      <br>
+    </div>
+
+
+  <button type="submit" class="btn btn-primary mb-2 btn-submit">Submit</button>
+
+</form>
+
+# endblock

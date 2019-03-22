@@ -1,0 +1,2 @@
+#ignore large files in 'embeddings' folder
+embeddings/**
