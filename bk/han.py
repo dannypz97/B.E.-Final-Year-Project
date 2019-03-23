@@ -1,16 +1,19 @@
 import re
 import os
 import sys
-import json
 import numpy as np
 from sklearn.preprocessing import LabelBinarizer, MultiLabelBinarizer
+import tensorflow as tf
 import keras
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
-from keras.layers import Dense, Input, Reshape, Concatenate, Flatten
-from keras.layers import Conv1D, GlobalMaxPooling1D, Embedding, Dropout, LSTM
+from keras.layers import Dense, Input, Reshape, concatenate, Concatenate, Flatten
+from keras.layers import Conv1D, MaxPool1D, GlobalMaxPooling1D, GlobalAvgPool1D, Embedding, Dropout, LSTM
 from keras.models import Model, load_model
-
+from keras.engine.topology import Layer
+from keras import  backend as K
+from keras import initializers, regularizers, constraints, optimizers, layers, callbacks
+from keras_self_attention import SeqSelfAttention
 import mysql.connector
 
 
@@ -118,6 +121,17 @@ class SentenceClassifier:
         print("\tNo. of words not found in pre-trained embeddings: ", len(words_not_found))
         return embedding_matrix
 
+    def get_conv_pool(self, input, n_grams=[3]):
+        '''
+        Creates different convolutional layer branches.
+        '''
+        branches = []
+        for i in range(len(n_grams)):
+            branch = keras.layers.Conv1D(128, kernel_size=n_grams[i], padding='valid',kernel_initializer='normal', activation='relu', )(input)
+            branch = keras.layers.GlobalMaxPooling1D()(branch)
+            branches.append(branch)
+        return branches
+
     def sentence_classifier_cnn(self, embedding_matrix, x, y, table, load_saved=1):
         """
         A static CNN model.
@@ -129,7 +143,7 @@ class SentenceClassifier:
         model_name = table + ".model.h5"
         if load_saved == 1 and os.path.exists('./saved/' + model_name):
             print("\nLoading saved model...")
-            model = load_model('./saved/' + model_name)
+            model = load_model('./saved/' + model_name, custom_objects={"AttentionWithContext": AttentionWithContext})
 
         else:
             print("\nTraining model...")
@@ -138,18 +152,14 @@ class SentenceClassifier:
                                 weights=[embedding_matrix],
                                 input_length=self.MAX_SEQUENCE_LENGTH, trainable=False)(inputs)
 
-            X = keras.layers.SpatialDropout1D(0.2)(embedding)
-            X = keras.layers.BatchNormalization()(X)
-            X = keras.layers.Bidirectional(LSTM(128, return_sequences=True))(X)
-            X = keras.layers.Conv1D(64, kernel_size=1, padding='valid', kernel_initializer='normal')(X)
-            X = keras.layers.GlobalMaxPooling1D()(X)
 
-            X = keras.layers.Dense(128, activation="relu")(X)
-            X = Dropout(0.2)(X)
-            X = keras.layers.BatchNormalization()(X)
-            output = Dense(units=self.LABEL_COUNT, activation='sigmoid')(X)
+            word = keras.layers.SpatialDropout1D(0.2)(embedding)
+            word_lstm = keras.layers.Bidirectional(LSTM(150, return_sequences=True, ))(word)
+            word_dense = keras.layers.TimeDistributed(Dense(units=200, activation="relu"))(word_lstm)
+            word_out = AttentionWithContext()(word_dense)
+            preds = keras.layers.Dense(units = self.LABEL_COUNT, activation='sigmoid')(word_out)
 
-            model = Model(inputs=inputs, outputs=output, name='intent_classifier')
+            model = Model(inputs=inputs, outputs=preds, name='intent_classifier')
             print("Model Summary")
             print(model.summary())
 
@@ -165,6 +175,9 @@ class SentenceClassifier:
         #keras.utils.vis_utils.plot_model(model, to_file='model_plot.png', show_shapes=True, show_layer_names=True)
 
         return model
+
+
+
 
     def tag_question(self, model, question):
 
@@ -204,14 +217,116 @@ class SentenceClassifier:
         cursor = mydb.cursor()
         return mydb, cursor
 
-if __name__ == '__main__':
+class AttentionWithContext(Layer):
+    """
+    Attention operation, with a context/query vector, for temporal data.
+    Supports Masking.
+    Follows the work of Yang et al. [https://www.cs.cmu.edu/~diyiy/docs/naacl16.pdf]
+    "Hierarchical Attention Networks for Document Classification"
+    by using a context vector to assist the attention
+    # Input shape
+        3D tensor with shape: `(samples, steps, features)`.
+    # Output shape
+        2D tensor with shape: `(samples, features)`.
+    How to use:
+    Just put it on top of an RNN Layer (GRU/LSTM/SimpleRNN) with return_sequences=True.
+    The dimensions are inferred based on the output shape of the RNN.
+    Note: The layer has been tested with Keras 2.0.6
+    Example:
+        model.add(LSTM(64, return_sequences=True))
+        model.add(AttentionWithContext())
+        # next add a Dense layer (for classification/regression) or whatever...
+    """
 
+    def __init__(self,
+                 W_regularizer=None, u_regularizer=None, b_regularizer=None,
+                 W_constraint=None, u_constraint=None, b_constraint=None,
+                 bias=True, **kwargs):
+
+        self.supports_masking = True
+        self.init = initializers.get('glorot_uniform')
+
+        self.W_regularizer = regularizers.get(W_regularizer)
+        self.u_regularizer = regularizers.get(u_regularizer)
+        self.b_regularizer = regularizers.get(b_regularizer)
+
+        self.W_constraint = constraints.get(W_constraint)
+        self.u_constraint = constraints.get(u_constraint)
+        self.b_constraint = constraints.get(b_constraint)
+
+        self.bias = bias
+        super(AttentionWithContext, self).__init__(**kwargs)
+
+    def build(self, input_shape):
+        assert len(input_shape) == 3
+
+        self.W = self.add_weight((input_shape[-1], input_shape[-1],),
+                                 initializer=self.init,
+                                 name='{}_W'.format(self.name),
+                                 regularizer=self.W_regularizer,
+                                 constraint=self.W_constraint)
+        if self.bias:
+            self.b = self.add_weight((input_shape[-1],),
+                                     initializer='zero',
+                                     name='{}_b'.format(self.name),
+                                     regularizer=self.b_regularizer,
+                                     constraint=self.b_constraint)
+
+        self.u = self.add_weight((input_shape[-1],),
+                                 initializer=self.init,
+                                 name='{}_u'.format(self.name),
+                                 regularizer=self.u_regularizer,
+                                 constraint=self.u_constraint)
+
+        super(AttentionWithContext, self).build(input_shape)
+
+    def compute_mask(self, input, input_mask=None):
+        # do not pass the mask to the next layers
+        return None
+
+    def dot_product(self, x, kernel):
+        """
+        Wrapper for dot product operation, in order to be compatible with both
+        Theano and Tensorflow
+        Args:
+            x (): input
+            kernel (): weights
+        Returns:
+        """
+        if K.backend() == 'tensorflow':
+            return K.squeeze(K.dot(x, K.expand_dims(kernel)), axis=-1)
+        else:
+            return K.dot(x, kernel)
+
+    def call(self, x, mask=None):
+        uit = self.dot_product(x, self.W)
+
+        if self.bias:
+            uit += self.b
+
+        uit = K.tanh(uit)
+        ait = self.dot_product(uit, self.u)
+
+        a = K.exp(ait)
+
+        # apply mask after the exp. will be re-normalized next
+        if mask is not None:
+            # Cast the mask to floatX to avoid float64 upcasting in theano
+            a *= K.cast(mask, K.floatx())
+
+        # in some cases especially in the early stages of training the sum may be almost zero
+        # and this results in NaN's. A workaround is to add a very small positive number ε to the sum.
+        # a /= K.cast(K.sum(a, axis=1, keepdims=True), K.floatx())
+        a /= K.cast(K.sum(a, axis=1, keepdims=True) + K.epsilon(), K.floatx())
+
+        a = K.expand_dims(a)
+        weighted_input = x * a
+        return K.sum(weighted_input, axis=1)
+
+    def compute_output_shape(self, input_shape):
+        return input_shape[0], input_shape[-1]
+
+if __name__ == '__main__':
     classifier = SentenceClassifier()
     model, embeddings_index = classifier.setup_classifier('compiled')
-    classifier.tag_question(model, "copyright and trademark and will violation of constitution send me to prison ?")
-    classifier.tag_question(model," Difference between copyright and trademark and will violation of constitution send me to prison")
-    classifier.tag_question(model," What's copyright and trademark and will violation of constitution send me to prison")
-    classifier.tag_question(model,"copyright and trademark and will violation of constitution send me to prison")
-    classifier.tag_question(model, "copyright, trademark and will violation of constitution send me to prison")
-    classifier.tag_question(model, "Criminal to download or distribute copyrighted content for free and distribute it to evryone and profit off their blooad and constitutional tears?")
-
+    classifier.tag_question(model, "What is the difference between trademark and copyright will violation take me to court since I've broken the constitution law?")

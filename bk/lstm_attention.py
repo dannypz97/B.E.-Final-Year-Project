@@ -10,6 +10,9 @@ from keras.preprocessing.sequence import pad_sequences
 from keras.layers import Dense, Input, Reshape, concatenate, Concatenate, Flatten
 from keras.layers import Conv1D, MaxPool1D, GlobalMaxPooling1D, GlobalAvgPool1D, Embedding, Dropout, LSTM
 from keras.models import Model, load_model
+from keras import backend as K
+from keras.engine.topology import Layer
+from keras import initializers, regularizers, constraints
 
 import mysql.connector
 
@@ -140,7 +143,7 @@ class SentenceClassifier:
         model_name = table + ".model.h5"
         if load_saved == 1 and os.path.exists('./saved/' + model_name):
             print("\nLoading saved model...")
-            model = load_model('./saved/' + model_name)
+            model = load_model('./saved/' + model_name, custom_objects={'Attention':Attention})
 
         else:
             print("\nTraining model...")
@@ -149,15 +152,16 @@ class SentenceClassifier:
                                 weights=[embedding_matrix],
                                 input_length=self.MAX_SEQUENCE_LENGTH, trainable=False)(inputs)
 
-            conv_inputs = Reshape((self.MAX_SEQUENCE_LENGTH, self.EMBEDDING_DIM))(embedding)
+            X = keras.layers.SpatialDropout1D(0.3)(embedding)
+            X1 = keras.layers.Bidirectional(LSTM(256, return_sequences=True))(X)
+            X2 = keras.layers.Bidirectional(keras.layers.GRU(128, return_sequences=True))(X)
 
-            branches = self.get_conv_pool(conv_inputs)
-            convolved_tensor = Concatenate(axis=1)(branches)
+            avg_pool = GlobalAvgPool1D()(X1)
+            max_pool = GlobalMaxPooling1D()(X2)
+            attention = Attention(self.MAX_SEQUENCE_LENGTH)(X2)
+            conc = Concatenate()([avg_pool, max_pool, attention])
 
-            #flatten = Flatten()(convolved_tensor)
-            dropout = Dropout(0.5)(convolved_tensor)
-
-            hidden = Dense(units=500, activation="relu")(dropout)
+            hidden = Dense(units=500, activation="relu")(conc)
             output = Dense(units=self.LABEL_COUNT, activation='sigmoid')(hidden)
 
             model = Model(inputs=inputs, outputs=output, name='intent_classifier')
@@ -218,7 +222,77 @@ class SentenceClassifier:
         cursor = mydb.cursor()
         return mydb, cursor
 
+class Attention(Layer):
+    def __init__(self, step_dim=200,
+                 W_regularizer=None, b_regularizer=None,
+                 W_constraint=None, b_constraint=None,
+                 bias=True, **kwargs):
+        self.supports_masking = True
+        self.init = initializers.get('glorot_uniform')
+
+        self.W_regularizer = regularizers.get(W_regularizer)
+        self.b_regularizer = regularizers.get(b_regularizer)
+
+        self.W_constraint = constraints.get(W_constraint)
+        self.b_constraint = constraints.get(b_constraint)
+
+        self.bias = bias
+        self.step_dim = step_dim
+        self.features_dim = 0
+        super(Attention, self).__init__(**kwargs)
+
+    def build(self, input_shape):
+        assert len(input_shape) == 3
+
+        self.W = self.add_weight((input_shape[-1],),
+                                 initializer=self.init,
+                                 name='{}_W'.format(self.name),
+                                 regularizer=self.W_regularizer,
+                                 constraint=self.W_constraint)
+        self.features_dim = input_shape[-1]
+
+        if self.bias:
+            self.b = self.add_weight((input_shape[1],),
+                                     initializer='zero',
+                                     name='{}_b'.format(self.name),
+                                     regularizer=self.b_regularizer,
+                                     constraint=self.b_constraint)
+        else:
+            self.b = None
+
+        self.built = True
+
+    def compute_mask(self, input, input_mask=None):
+        return None
+
+    def call(self, x, mask=None):
+        features_dim = self.features_dim
+        step_dim = self.step_dim
+
+        eij = K.reshape(K.dot(K.reshape(x, (-1, features_dim)),
+                        K.reshape(self.W, (features_dim, 1))), (-1, step_dim))
+
+        if self.bias:
+            eij += self.b
+
+        eij = K.tanh(eij)
+
+        a = K.exp(eij)
+
+        if mask is not None:
+            a *= K.cast(mask, K.floatx())
+
+        a /= K.cast(K.sum(a, axis=1, keepdims=True) + K.epsilon(), K.floatx())
+
+        a = K.expand_dims(a)
+        weighted_input = x * a
+        return K.sum(weighted_input, axis=1)
+
+    def compute_output_shape(self, input_shape):
+        return input_shape[0],  self.features_dim
+
 if __name__ == '__main__':
     classifier = SentenceClassifier()
     model, embeddings_index = classifier.setup_classifier('compiled')
-    classifier.tag_question(model, "What's the difference between copyright and trademark and will violation take me to court since I've broken the constitution law?")
+    classifier.tag_question(model, "What's the difference between copyright and trademark?")
+    classifier.tag_question(model, "What's the difference between copyright and trademark and will violation take me to court since I've broken the constitutional law?")

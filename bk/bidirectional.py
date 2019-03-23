@@ -1,14 +1,14 @@
 import re
 import os
 import sys
-import json
 import numpy as np
 from sklearn.preprocessing import LabelBinarizer, MultiLabelBinarizer
+import tensorflow as tf
 import keras
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
-from keras.layers import Dense, Input, Reshape, Concatenate, Flatten
-from keras.layers import Conv1D, GlobalMaxPooling1D, Embedding, Dropout, LSTM
+from keras.layers import Dense, Input, Reshape, concatenate, Concatenate, Flatten
+from keras.layers import Conv1D, MaxPool1D, GlobalMaxPooling1D, GlobalAvgPool1D, Embedding, Dropout, LSTM
 from keras.models import Model, load_model
 
 import mysql.connector
@@ -118,6 +118,17 @@ class SentenceClassifier:
         print("\tNo. of words not found in pre-trained embeddings: ", len(words_not_found))
         return embedding_matrix
 
+    def get_conv_pool(self, input, n_grams=[3]):
+        '''
+        Creates different convolutional layer branches.
+        '''
+        branches = []
+        for i in range(len(n_grams)):
+            branch = keras.layers.Conv1D(128, kernel_size=n_grams[i], padding='valid',kernel_initializer='normal', activation='relu', )(input)
+            branch = keras.layers.GlobalMaxPooling1D()(branch)
+            branches.append(branch)
+        return branches
+
     def sentence_classifier_cnn(self, embedding_matrix, x, y, table, load_saved=1):
         """
         A static CNN model.
@@ -138,16 +149,14 @@ class SentenceClassifier:
                                 weights=[embedding_matrix],
                                 input_length=self.MAX_SEQUENCE_LENGTH, trainable=False)(inputs)
 
-            X = keras.layers.SpatialDropout1D(0.2)(embedding)
-            X = keras.layers.BatchNormalization()(X)
-            X = keras.layers.Bidirectional(LSTM(128, return_sequences=True))(X)
-            X = keras.layers.Conv1D(64, kernel_size=1, padding='valid', kernel_initializer='normal')(X)
-            X = keras.layers.GlobalMaxPooling1D()(X)
+            X = keras.layers.SpatialDropout1D(0.3)(embedding)
+            X1 = keras.layers.Bidirectional(LSTM(256, return_sequences=True))(X)
+            X2 = keras.layers.Bidirectional(keras.layers.GRU(128, return_sequences=True))(X1)
+            max_pool_1 = GlobalMaxPooling1D()(X1)
+            max_pool_2 = GlobalMaxPooling1D()(X2)
+            conc = Concatenate()([max_pool_1, max_pool_2])
 
-            X = keras.layers.Dense(128, activation="relu")(X)
-            X = Dropout(0.2)(X)
-            X = keras.layers.BatchNormalization()(X)
-            output = Dense(units=self.LABEL_COUNT, activation='sigmoid')(X)
+            output = Dense(units=self.LABEL_COUNT, activation='sigmoid')(conc)
 
             model = Model(inputs=inputs, outputs=output, name='intent_classifier')
             print("Model Summary")
@@ -158,13 +167,16 @@ class SentenceClassifier:
                           metrics=['accuracy'])
             model.fit(x, y,
                       batch_size=65,
-                      epochs=30,
+                      epochs=25,
                       verbose=2)
 
             model.save('./saved/' + model_name)
         #keras.utils.vis_utils.plot_model(model, to_file='model_plot.png', show_shapes=True, show_layer_names=True)
 
         return model
+
+
+
 
     def tag_question(self, model, question):
 
@@ -205,13 +217,6 @@ class SentenceClassifier:
         return mydb, cursor
 
 if __name__ == '__main__':
-
     classifier = SentenceClassifier()
     model, embeddings_index = classifier.setup_classifier('compiled')
-    classifier.tag_question(model, "copyright and trademark and will violation of constitution send me to prison ?")
-    classifier.tag_question(model," Difference between copyright and trademark and will violation of constitution send me to prison")
-    classifier.tag_question(model," What's copyright and trademark and will violation of constitution send me to prison")
-    classifier.tag_question(model,"copyright and trademark and will violation of constitution send me to prison")
-    classifier.tag_question(model, "copyright, trademark and will violation of constitution send me to prison")
-    classifier.tag_question(model, "Criminal to download or distribute copyrighted content for free and distribute it to evryone and profit off their blooad and constitutional tears?")
-
+    classifier.tag_question(model, "When has Judicial Review not been the process used to deem an act unconstitutional?")

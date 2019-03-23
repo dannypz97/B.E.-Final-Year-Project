@@ -4,11 +4,12 @@ import sys
 import json
 import numpy as np
 from sklearn.preprocessing import LabelBinarizer, MultiLabelBinarizer
+import tensorflow as tf
 import keras
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
-from keras.layers import Dense, Input, Reshape, Concatenate, Flatten
-from keras.layers import Conv1D, GlobalMaxPooling1D, Embedding, Dropout, LSTM
+from keras.layers import Dense, Input, Reshape, concatenate, Concatenate, Flatten
+from keras.layers import Conv1D, MaxPool1D, GlobalMaxPooling1D, GlobalAvgPool1D, Embedding, Dropout, LSTM
 from keras.models import Model, load_model
 
 import mysql.connector
@@ -42,24 +43,36 @@ class SentenceClassifier:
         string = re.sub(r"\s{2,}", " ", string)
         return string.strip().lower()
 
-    def loader_encoder(self, table):
+    def loader_encoder(self, table, type="sql"):
         """
-        Load and encode data from database.
-        """
-        mydb, cursor = self.connect_to_db()
+        Load and encode data from dataset.
 
-        cursor.execute("select question from " + table) #load questions from db
-        results = list(str(x) for x in cursor.fetchall())
+        type = "sql" means get data from MySQL database.
+        type = "json" means get data from .json file.
+        """
+
+        if type == "sql":
+            mydb, cursor = self.connect_to_db()
+            cursor.execute("select question from " + table) #load questions from db
+            questions = list(str(x) for x in cursor.fetchall())
+            cursor.execute("select tags from " + table)  # load tags from db
+            tags = list(re.split(',\s*', tag[0]) for tag in cursor.fetchall())
+
+        elif type == "json":
+            with open('./data/stack-exchange/Law.json', 'r', encoding='utf8') as f:
+                datastore = json.load(f)
+                questions = []
+                tags = []
+                for row in datastore:
+                    questions.append(row['question'])
+                    tags.append(row['tags'].split(', '))
 
         tokenizer = Tokenizer(lower=True, char_level=False)
-        tokenizer.fit_on_texts(results)
+        tokenizer.fit_on_texts(questions)
         self.WORD_INDEX = tokenizer.word_index
 
-        questions_encoded = tokenizer.texts_to_sequences(results)
+        questions_encoded = tokenizer.texts_to_sequences(questions)
         questions_encoded_padded = pad_sequences(questions_encoded, maxlen=self.MAX_SEQUENCE_LENGTH, padding='post')
-
-        cursor.execute("select tags from " + table) #load tags from db
-        tags = list(re.split(',\s*', tag[0]) for tag in cursor.fetchall())
 
         for i, ele in enumerate(tags):
             for j, tag in enumerate(ele):
@@ -118,6 +131,22 @@ class SentenceClassifier:
         print("\tNo. of words not found in pre-trained embeddings: ", len(words_not_found))
         return embedding_matrix
 
+    def get_top_k(self, x):
+        shifted_input = tf.transpose(x, [0, 2, 1])
+        top_k = tf.nn.top_k(x, k=2, sorted=True)[0]
+        return Flatten()(top_k)
+
+    def get_conv_pool(self, input, n_grams=[3, 5, 7]):
+        '''
+        Creates different convolutional layer branches.
+        '''
+        branches = []
+        for i in range(len(n_grams)):
+            branch = keras.layers.Conv1D(128, kernel_size=n_grams[i], padding='valid',kernel_initializer='normal', activation='relu', )(input)
+
+            branches.append(branch)
+        return branches
+
     def sentence_classifier_cnn(self, embedding_matrix, x, y, table, load_saved=1):
         """
         A static CNN model.
@@ -138,18 +167,29 @@ class SentenceClassifier:
                                 weights=[embedding_matrix],
                                 input_length=self.MAX_SEQUENCE_LENGTH, trainable=False)(inputs)
 
-            X = keras.layers.SpatialDropout1D(0.2)(embedding)
-            X = keras.layers.BatchNormalization()(X)
-            X = keras.layers.Bidirectional(LSTM(128, return_sequences=True))(X)
-            X = keras.layers.Conv1D(64, kernel_size=1, padding='valid', kernel_initializer='normal')(X)
-            X = keras.layers.GlobalMaxPooling1D()(X)
+            dropout = Dropout(0.2)(embedding)
 
-            X = keras.layers.Dense(128, activation="relu")(X)
-            X = Dropout(0.2)(X)
-            X = keras.layers.BatchNormalization()(X)
-            output = Dense(units=self.LABEL_COUNT, activation='sigmoid')(X)
+            main = Conv1D(filters=128, kernel_size=2, padding='same', activation='relu')(dropout)
+            main = keras.layers.MaxPooling1D(pool_size=2)(main)
+            main = Conv1D(filters=128, kernel_size=3, padding='same', activation='relu')(main)
+            main = keras.layers.MaxPooling1D(pool_size=2)(main)
+            main = keras.layers.GRU(64)(main)
+            main = Dense(200, activation="relu")(main)
+            main = Dense(self.LABEL_COUNT, activation="sigmoid")(main)
+            #conv_inputs = Reshape((self.MAX_SEQUENCE_LENGTH, self.EMBEDDING_DIM))(embedding)
 
-            model = Model(inputs=inputs, outputs=output, name='intent_classifier')
+            #branches = self.get_conv_pool(conv_inputs)
+            #convolved_tensor = Concatenate(axis=1)(branches)
+
+            #convolved_tensor = keras.layers.Lambda(self.get_top_k)(convolved_tensor)
+
+            #flatten = Flatten()(convolved_tensor)
+
+
+            #hidden = Dense(units=500, activation="relu")(convolved_tensor)
+            #output = Dense(units=self.LABEL_COUNT, activation='sigmoid')(hidden)
+
+            model = Model(inputs=inputs, outputs=main, name='intent_classifier')
             print("Model Summary")
             print(model.summary())
 
@@ -158,13 +198,16 @@ class SentenceClassifier:
                           metrics=['accuracy'])
             model.fit(x, y,
                       batch_size=65,
-                      epochs=30,
+                      epochs=15,
                       verbose=2)
 
             model.save('./saved/' + model_name)
         #keras.utils.vis_utils.plot_model(model, to_file='model_plot.png', show_shapes=True, show_layer_names=True)
 
         return model
+
+
+
 
     def tag_question(self, model, question):
 
@@ -205,13 +248,8 @@ class SentenceClassifier:
         return mydb, cursor
 
 if __name__ == '__main__':
-
     classifier = SentenceClassifier()
     model, embeddings_index = classifier.setup_classifier('compiled')
-    classifier.tag_question(model, "copyright and trademark and will violation of constitution send me to prison ?")
-    classifier.tag_question(model," Difference between copyright and trademark and will violation of constitution send me to prison")
-    classifier.tag_question(model," What's copyright and trademark and will violation of constitution send me to prison")
-    classifier.tag_question(model,"copyright and trademark and will violation of constitution send me to prison")
-    classifier.tag_question(model, "copyright, trademark and will violation of constitution send me to prison")
-    classifier.tag_question(model, "Criminal to download or distribute copyrighted content for free and distribute it to evryone and profit off their blooad and constitutional tears?")
+    sentence = "What's the difference between copyright and trademark?"
+    classifier.tag_question(model, sentence)
 

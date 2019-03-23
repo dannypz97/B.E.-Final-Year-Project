@@ -1,14 +1,16 @@
 import re
 import os
 import sys
-import json
+from itertools import dropwhile
+
 import numpy as np
 from sklearn.preprocessing import LabelBinarizer, MultiLabelBinarizer
+import tensorflow as tf
 import keras
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
-from keras.layers import Dense, Input, Reshape, Concatenate, Flatten
-from keras.layers import Conv1D, GlobalMaxPooling1D, Embedding, Dropout, LSTM
+from keras.layers import Dense, Input, Reshape, concatenate, Concatenate, Flatten
+from keras.layers import Conv1D, MaxPool1D, GlobalMaxPooling1D, GlobalAvgPool1D, Embedding, Dropout, LSTM
 from keras.models import Model, load_model
 
 import mysql.connector
@@ -118,14 +120,26 @@ class SentenceClassifier:
         print("\tNo. of words not found in pre-trained embeddings: ", len(words_not_found))
         return embedding_matrix
 
-    def sentence_classifier_cnn(self, embedding_matrix, x, y, table, load_saved=1):
+    def get_conv_pool(self, input, n_grams=[3, 3, 3], pool_dim=[48, 47, 46], feature_maps=128):
+        '''
+        Creates different convolutional layer branches.
+        '''
+        branches = []
+        for i in range(len(n_grams)):
+            branch = keras.layers.Conv1D(128, n_grams[i], padding='same', kernel_initializer='normal',
+                    activation='relu',)(input)
+            #branch = keras.layers.MaxPool2D(pool_size=(pool_dim[i], 1), strides=(1, 1), padding='valid')(branch)
+
+            branches.append(branch)
+        return branches
+
+    def sentence_classifier_cnn(self, embedding_matrix, x, y, table, load_saved=0):
         """
         A static CNN model.
         Makes uses of Keras functional API for constructing the model.
 
         If load_saved=1, THEN load old model, ELSE train new model
         """
-
         model_name = table + ".model.h5"
         if load_saved == 1 and os.path.exists('./saved/' + model_name):
             print("\nLoading saved model...")
@@ -138,16 +152,16 @@ class SentenceClassifier:
                                 weights=[embedding_matrix],
                                 input_length=self.MAX_SEQUENCE_LENGTH, trainable=False)(inputs)
 
-            X = keras.layers.SpatialDropout1D(0.2)(embedding)
-            X = keras.layers.BatchNormalization()(X)
-            X = keras.layers.Bidirectional(LSTM(128, return_sequences=True))(X)
-            X = keras.layers.Conv1D(64, kernel_size=1, padding='valid', kernel_initializer='normal')(X)
-            X = keras.layers.GlobalMaxPooling1D()(X)
+            dropout = Dropout(0.5)(embedding)
+            #conv_inputs = Reshape((self.MAX_SEQUENCE_LENGTH, self.EMBEDDING_DIM, 1))(dropout)
 
-            X = keras.layers.Dense(128, activation="relu")(X)
-            X = Dropout(0.2)(X)
-            X = keras.layers.BatchNormalization()(X)
-            output = Dense(units=self.LABEL_COUNT, activation='sigmoid')(X)
+            branches = self.get_conv_pool(dropout)
+            convolved_tensor = Concatenate(axis=1)(branches)
+            #convolved_tensor = keras.layers.Conv1D(128, 3, padding='same', kernel_initializer='normal',activation='relu', )(embedding)
+
+            lstm = LSTM(128)(convolved_tensor)
+
+            output = Dense(units=self.LABEL_COUNT, activation='sigmoid', name='fully_connected_affine_layer')(lstm)
 
             model = Model(inputs=inputs, outputs=output, name='intent_classifier')
             print("Model Summary")
@@ -158,13 +172,16 @@ class SentenceClassifier:
                           metrics=['accuracy'])
             model.fit(x, y,
                       batch_size=65,
-                      epochs=30,
+                      epochs=25,
                       verbose=2)
 
             model.save('./saved/' + model_name)
         #keras.utils.vis_utils.plot_model(model, to_file='model_plot.png', show_shapes=True, show_layer_names=True)
 
         return model
+
+
+
 
     def tag_question(self, model, question):
 
@@ -205,13 +222,6 @@ class SentenceClassifier:
         return mydb, cursor
 
 if __name__ == '__main__':
-
     classifier = SentenceClassifier()
     model, embeddings_index = classifier.setup_classifier('compiled')
-    classifier.tag_question(model, "copyright and trademark and will violation of constitution send me to prison ?")
-    classifier.tag_question(model," Difference between copyright and trademark and will violation of constitution send me to prison")
-    classifier.tag_question(model," What's copyright and trademark and will violation of constitution send me to prison")
-    classifier.tag_question(model,"copyright and trademark and will violation of constitution send me to prison")
-    classifier.tag_question(model, "copyright, trademark and will violation of constitution send me to prison")
-    classifier.tag_question(model, "Criminal to download or distribute copyrighted content for free and distribute it to evryone and profit off their blooad and constitutional tears?")
-
+    classifier.tag_question(model, "What's the difference between copyright and trademark and will violation take me to court since I've broken the constitution law?")

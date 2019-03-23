@@ -1,6 +1,6 @@
+import sys
 import re
 import os
-import sys
 import json
 import numpy as np
 from sklearn.preprocessing import LabelBinarizer, MultiLabelBinarizer
@@ -10,9 +10,6 @@ from keras.preprocessing.sequence import pad_sequences
 from keras.layers import Dense, Input, Reshape, Concatenate, Flatten
 from keras.layers import Conv1D, GlobalMaxPooling1D, Embedding, Dropout, LSTM
 from keras.models import Model, load_model
-
-import mysql.connector
-
 
 class SentenceClassifier:
     def __init__(self):
@@ -42,24 +39,29 @@ class SentenceClassifier:
         string = re.sub(r"\s{2,}", " ", string)
         return string.strip().lower()
 
-    def loader_encoder(self, table):
+    def loader_encoder(self, table, type="json"):
         """
-        Load and encode data from database.
-        """
-        mydb, cursor = self.connect_to_db()
+        Load and encode data from dataset.
 
-        cursor.execute("select question from " + table) #load questions from db
-        results = list(str(x) for x in cursor.fetchall())
+        type = "sql" means get data from MySQL database.
+        type = "json" means get data from .json file.        """
+
+        if type == "json":
+            with open('data/stack-exchange/compiled.json', 'r', encoding='utf8') as f:
+                datastore = json.load(f)
+                questions = []
+                tags = []
+                for row in datastore:
+                    questions.append(row['question'])
+                    tags.append(row['tags'].split(', '))
 
         tokenizer = Tokenizer(lower=True, char_level=False)
-        tokenizer.fit_on_texts(results)
+        tokenizer.fit_on_texts(questions)
         self.WORD_INDEX = tokenizer.word_index
 
-        questions_encoded = tokenizer.texts_to_sequences(results)
+        questions_encoded = tokenizer.texts_to_sequences(questions)
         questions_encoded_padded = pad_sequences(questions_encoded, maxlen=self.MAX_SEQUENCE_LENGTH, padding='post')
 
-        cursor.execute("select tags from " + table) #load tags from db
-        tags = list(re.split(',\s*', tag[0]) for tag in cursor.fetchall())
 
         for i, ele in enumerate(tags):
             for j, tag in enumerate(ele):
@@ -72,9 +74,6 @@ class SentenceClassifier:
         tags_encoded = encoder.fit_transform(tags)
         self.LABEL_COUNT = len(tags_encoded[0]) #No. of labels
         print("\tUnique Tokens in Training Data: ", len(self.WORD_INDEX))
-
-        del(mydb)
-        del(cursor)
 
         return questions_encoded_padded, tags_encoded
 
@@ -139,14 +138,14 @@ class SentenceClassifier:
                                 input_length=self.MAX_SEQUENCE_LENGTH, trainable=False)(inputs)
 
             X = keras.layers.SpatialDropout1D(0.2)(embedding)
-            X = keras.layers.BatchNormalization()(X)
+            #X = keras.layers.BatchNormalization()(X)
             X = keras.layers.Bidirectional(LSTM(128, return_sequences=True))(X)
             X = keras.layers.Conv1D(64, kernel_size=1, padding='valid', kernel_initializer='normal')(X)
             X = keras.layers.GlobalMaxPooling1D()(X)
 
             X = keras.layers.Dense(128, activation="relu")(X)
             X = Dropout(0.2)(X)
-            X = keras.layers.BatchNormalization()(X)
+            #X = keras.layers.BatchNormalization()(X)
             output = Dense(units=self.LABEL_COUNT, activation='sigmoid')(X)
 
             model = Model(inputs=inputs, outputs=output, name='intent_classifier')
@@ -205,13 +204,7 @@ class SentenceClassifier:
         return mydb, cursor
 
 if __name__ == '__main__':
-
     classifier = SentenceClassifier()
     model, embeddings_index = classifier.setup_classifier('compiled')
-    classifier.tag_question(model, "copyright and trademark and will violation of constitution send me to prison ?")
-    classifier.tag_question(model," Difference between copyright and trademark and will violation of constitution send me to prison")
-    classifier.tag_question(model," What's copyright and trademark and will violation of constitution send me to prison")
-    classifier.tag_question(model,"copyright and trademark and will violation of constitution send me to prison")
-    classifier.tag_question(model, "copyright, trademark and will violation of constitution send me to prison")
-    classifier.tag_question(model, "Criminal to download or distribute copyrighted content for free and distribute it to evryone and profit off their blooad and constitutional tears?")
+    classifier.tag_question(model, "What's the difference between copyright and trademark and will violation of constitution send me to prison ?")
 
