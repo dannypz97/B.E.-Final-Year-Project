@@ -1,0 +1,49 @@
+select Top 10900 Title, Tags from Posts where PostTypeId=1 and Score>=1 and Title 
+not like '%sex' and (
+Title like '%stock%' or
+Title like '%broker%' or
+Tags like '%shares%' or
+Title like '%loan%' or
+Title like '%forex%' or
+Tags like '%foreign-exchange%' or
+Title like '%paypal%' or
+Title like '%mortgage%' or
+Title like '%401k%' or
+Title like '%united-states%' or
+Title like '%invest%' or
+Tags like '%trusts%' or
+Title like '%withdraw%' or
+Tags like '%check%' or
+Title like '%bonds%' or
+Title like '%insurance%' or
+Title like '%visa%' or
+Title like '%mastercard%' or
+Title like '%american express%' or
+Tags like '%terminology%' or
+Tags like '%bank%' or
+Tags like '%credit-card%' or
+Title like '%market%' or
+ Tags like '%inflation%' or 
+ Tags like '%mutual-fund%' or
+ Title like '%deposit%' or
+Tags like '%risk%' or
+Title like '%employ%' or
+Tags like '%school%' or
+Tags like '%college%' or
+Tags like '%univeristy%' or
+Tags like '%tuition%' or
+Title like '%education%' or
+Title like '%health%' or
+Title like '%medical%' or
+Title like '%portfolio%' or
+Title like '%income%' or
+Title like '%retire%' or
+Title like '%china%' or
+Title like '%india%' or
+Tags like '%united-kingdom%' or
+Title like '%saving%' or
+Tags like '%rent%'
+or Title like '%pension%')
+
+
+

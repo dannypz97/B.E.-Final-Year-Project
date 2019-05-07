@@ -59,7 +59,7 @@ class SentenceClassifier:
             tags = list(re.split(',\s*', tag[0]) for tag in cursor.fetchall())
 
         elif type == "json":
-            with open('./data/stack-exchange/Law.json', 'r', encoding='utf8') as f:
+            with open('./data/stack-exchange/compiled.json', 'r', encoding='utf8') as f:
                 datastore = json.load(f)
                 questions = []
                 tags = []

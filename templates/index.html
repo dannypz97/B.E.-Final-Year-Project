@@ -8,9 +8,11 @@
 
 # block body
 <label>Select Dataset: </label>
+
 <select class="form-control  dataset-select">
-  <option value="trec">TREC-6</option>
-  <option value="compiled">Compiled</option>
+  <option value="trec" {% if table=="trec" %} selected="selected" {% endif %}>TREC-6</option>
+  <option value="photography" {% if table=="photography" %} selected="selected" {% endif %}>Photography</option>
+  <option value="compiled" {% if table=="compiled" %} selected="selected" {% endif %}>Compiled</option>
 </select>
 
 <form class="form" action="classify/" method="post">

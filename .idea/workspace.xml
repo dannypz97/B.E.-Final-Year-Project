@@ -4,12 +4,18 @@
     <list default="true" id="ddaff04d-4e48-4d99-9977-29d3f2b7a825" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Experiments.doc" beforeDir="false" afterPath="$PROJECT_DIR$/Experiments.doc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bk/classifier - Copy.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backup.txt" beforeDir="false" afterPath="$PROJECT_DIR$/backup.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bk/cnn.py" beforeDir="false" afterPath="$PROJECT_DIR$/bk/cnn.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/classifier.py" beforeDir="false" afterPath="$PROJECT_DIR$/classifier.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/clstm.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/stack-exchange/Law.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/classifierColab.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/stack-exchange/compiled.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/stack-exchange/to_sql.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/sample.py" beforeDir="false" afterPath="$PROJECT_DIR$/sample.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/~$periments.doc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/classify.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/classify.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/layout.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/layout.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/trec_db.py" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -19,11 +25,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/classifier.py">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/sample.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="876">
-              <caret line="148" column="12" lean-forward="true" selection-start-line="148" selection-start-column="12" selection-end-line="148" selection-end-column="12" />
+            <state relative-caret-position="267">
+              <caret line="81" column="24" selection-start-line="81" selection-start-column="24" selection-end-line="81" selection-end-column="24" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -31,11 +37,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/bk/clstm.py">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/classifier.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
-              <caret line="80" column="8" lean-forward="true" selection-start-line="80" selection-start-column="8" selection-end-line="80" selection-end-column="53" />
+            <state relative-caret-position="119">
+              <caret line="106" column="29" selection-start-line="106" selection-start-column="29" selection-end-line="106" selection-end-column="29" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -69,6 +75,13 @@
       <find>mydb</find>
       <find>trademark</find>
       <find>json</find>
+      <find>clea</find>
+      <find>print</find>
+      <find>string = re.sub(r&quot;\'ll&quot;, &quot;&quot;, string)</find>
+      <find>foc</find>
+      <find>canon</find>
+      <find>which is the</find>
+      <find>100</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -89,7 +102,6 @@
         <option value="$PROJECT_DIR$/samples/qt/ui1.py" />
         <option value="$PROJECT_DIR$/spacyier.py" />
         <option value="$PROJECT_DIR$/backup.txt" />
-        <option value="$PROJECT_DIR$/data/stack-exchange/to_sql.py" />
         <option value="$PROJECT_DIR$/trec_db.py" />
         <option value="$PROJECT_DIR$/classifier - Copy.py" />
         <option value="$PROJECT_DIR$/bk.py" />
@@ -99,10 +111,25 @@
         <option value="$PROJECT_DIR$/lstm_attention.py" />
         <option value="$PROJECT_DIR$/han.py" />
         <option value="$PROJECT_DIR$/original.py" />
-        <option value="$PROJECT_DIR$/vdcnn.py" />
-        <option value="$PROJECT_DIR$/sample.py" />
         <option value="$PROJECT_DIR$/bidirectional.py" />
+        <option value="$PROJECT_DIR$/test.py" />
+        <option value="$PROJECT_DIR$/data/stack-exchange/Psychology/to_sql.py" />
+        <option value="$PROJECT_DIR$/data/stack-exchange/Astronomy/to_sql.py" />
+        <option value="$PROJECT_DIR$/data/stack-exchange/Test - 2/to_sql.py" />
         <option value="$PROJECT_DIR$/classifierColab.py" />
+        <option value="$PROJECT_DIR$/cnn - Copy.py" />
+        <option value="$PROJECT_DIR$/data/stack-exchange/Test/to_sql.py" />
+        <option value="$PROJECT_DIR$/char_level_classifier.py" />
+        <option value="$PROJECT_DIR$/data/stack-exchange/to_sql.py" />
+        <option value="$PROJECT_DIR$/vdcnn.py" />
+        <option value="$PROJECT_DIR$/data/faq/to_sql.py" />
+        <option value="$PROJECT_DIR$/data/stack-exchange/Photography/to_sql.py" />
+        <option value="$PROJECT_DIR$/original_classifier.py" />
+        <option value="$PROJECT_DIR$/data/stack-exchange/Personal Finance/to_sql.py" />
+        <option value="$PROJECT_DIR$/data/trec/trec_db.py" />
+        <option value="$PROJECT_DIR$/data/stack-exchange/compiled/to_sql.py" />
+        <option value="$PROJECT_DIR$/wmd.py" />
+        <option value="$PROJECT_DIR$/sample.py" />
         <option value="$PROJECT_DIR$/classifier.py" />
       </list>
     </option>
@@ -121,6 +148,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -131,24 +159,28 @@
             <path>
               <item name="Pgm" type="b2602c69:ProjectViewProjectNode" />
               <item name="Pgm" type="462c0819:PsiDirectoryNode" />
-              <item name="bk" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Pgm" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Pgm" type="462c0819:PsiDirectoryNode" />
               <item name="data" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Pgm" type="b2602c69:ProjectViewProjectNode" />
               <item name="Pgm" type="462c0819:PsiDirectoryNode" />
               <item name="data" type="462c0819:PsiDirectoryNode" />
-              <item name="stack-exchange" type="462c0819:PsiDirectoryNode" />
+              <item name="trec" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Pgm" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Pgm" type="462c0819:PsiDirectoryNode" />
+              <item name="embeddings" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Pgm" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Pgm" type="462c0819:PsiDirectoryNode" />
+              <item name="saved" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -193,27 +225,6 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="bidirectional" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="Pgm" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/bidirectional.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <configuration name="classifier" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Pgm" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -235,7 +246,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="han" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="original_classifier" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Pgm" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -247,7 +258,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/han.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/original_classifier.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -277,7 +288,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="vdcnn" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="to_sql (1)" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Pgm" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -285,11 +296,32 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/data/stack-exchange/compiled" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/vdcnn.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/data/stack-exchange/compiled/to_sql.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="trec_db" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="Pgm" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/data/trec" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/data/trec/trec_db.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -299,19 +331,19 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.vdcnn" />
-      <item itemvalue="Python.bidirectional" />
-      <item itemvalue="Python.han" />
-      <item itemvalue="Python.classifier" />
+      <item itemvalue="Python.trec_db" />
       <item itemvalue="Python.sample" />
+      <item itemvalue="Python.original_classifier" />
+      <item itemvalue="Python.to_sql (1)" />
+      <item itemvalue="Python.classifier" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.classifier" />
         <item itemvalue="Python.sample" />
-        <item itemvalue="Python.bidirectional" />
-        <item itemvalue="Python.vdcnn" />
-        <item itemvalue="Python.han" />
+        <item itemvalue="Python.to_sql (1)" />
+        <item itemvalue="Python.trec_db" />
+        <item itemvalue="Python.original_classifier" />
       </list>
     </recent_temporary>
   </component>
@@ -328,47 +360,59 @@
     </task>
     <servers />
   </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4947589" visible="true" weight="0.12623926" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4947589" visible="true" weight="0.18241903" />
       <window_info id="Structure" order="1" sideWeight="0.5052411" side_tool="true" weight="0.17514871" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info active="true" anchor="bottom" id="Find" order="1" visible="true" weight="0.3286119" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.4220963" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.3286119" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.4976867" visible="true" weight="0.3371105" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39943343" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.3286119" />
       <window_info anchor="bottom" id="Version Control" order="7" />
-      <window_info anchor="bottom" id="Terminal" order="8" />
-      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
-      <window_info anchor="bottom" id="Python Console" order="10" />
+      <window_info anchor="bottom" id="Terminal" order="8" weight="0.3286119" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.50231326" side_tool="true" weight="0.3286119" />
+      <window_info anchor="bottom" id="Python Console" order="10" weight="0.3286119" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
     </layout>
+    <layout-to-restore>
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4947589" visible="true" weight="0.18241903" />
+      <window_info id="Structure" order="1" sideWeight="0.5052411" side_tool="true" weight="0.17514871" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.3286119" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4976867" weight="0.37252125" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.39943343" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.3286119" />
+      <window_info anchor="bottom" id="Version Control" order="7" />
+      <window_info anchor="bottom" id="Terminal" order="8" weight="0.3286119" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.50231326" side_tool="true" weight="0.3286119" />
+      <window_info anchor="bottom" id="Python Console" order="10" weight="0.3286119" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+    </layout-to-restore>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/tmp.txt" />
-    <entry file="file://$PROJECT_DIR$/copy_fine" />
-    <entry file="file://$PROJECT_DIR$/copy.txt" />
-    <entry file="file://$PROJECT_DIR$/svm.py" />
-    <entry file="file://$PROJECT_DIR$/spacy.ipynb" />
-    <entry file="file://$PROJECT_DIR$/data/trec/train_2000.label.txt" />
-    <entry file="file://$PROJECT_DIR$/data/trec/train_4000.label.txt" />
-    <entry file="file://$PROJECT_DIR$/copy_orig" />
-    <entry file="file://$PROJECT_DIR$/flask-app/app.py" />
     <entry file="file://$PROJECT_DIR$/samples/qt/ui1.py" />
-    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python37/Lib/site-packages/mysql/connector/connection.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="175" selection-start-line="175" selection-end-line="176" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/data/trec/train_1000.label.txt" />
     <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python37/Lib/site-packages/sklearn/utils/multiclass.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -396,23 +440,7 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/data/stack-exchange/Law.csv" />
-    <entry file="file://$PROJECT_DIR$/data/stack-exchange/to_sql.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="25" column="24" selection-start-line="25" selection-start-column="24" selection-end-line="25" selection-end-column="24" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trec_db.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="765">
-          <caret line="45" column="34" selection-start-line="45" selection-start-column="34" selection-end-line="45" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/trec_db.py" />
     <entry file="file://$PROJECT_DIR$/classifier - Copy.py" />
     <entry file="file://$PROJECT_DIR$/lstm.py" />
     <entry file="file://$PROJECT_DIR$/bk.py" />
@@ -440,16 +468,7 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/han.py" />
-    <entry file="file://$PROJECT_DIR$/bk/classifier - Copy.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-221">
-          <caret line="138" selection-start-line="138" selection-end-line="138" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/bk/classifier - Copy.py" />
     <entry file="file://$PROJECT_DIR$/bk/vdcnn.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="264">
@@ -461,17 +480,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/original.py" />
-    <entry file="file://$PROJECT_DIR$/bk/lstm_attention.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="258">
-          <caret line="297" column="169" lean-forward="true" selection-start-line="297" selection-start-column="4" selection-end-line="297" selection-end-column="169" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vdcnn.py" />
     <entry file="file://$PROJECT_DIR$/bk/bidirectional.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="204">
@@ -482,47 +490,145 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sample.py">
+    <entry file="file://$PROJECT_DIR$/bidirectional.py" />
+    <entry file="file://$PROJECT_DIR$/bk/clstm.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="122">
-          <caret line="19" selection-start-line="19" selection-end-line="25" selection-end-column="44" />
-          <folding>
-            <element signature="e#0#41#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bidirectional.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="527">
-          <caret line="44" selection-start-line="44" selection-end-line="73" selection-end-column="116" />
+        <state relative-caret-position="136">
+          <caret line="80" column="8" selection-start-line="80" selection-start-column="8" selection-end-line="80" selection-end-column="53" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/data/stack-exchange/Law.json">
+    <entry file="file://$PROJECT_DIR$/data/stack-exchange/compiled.json" />
+    <entry file="file://$PROJECT_DIR$/bk/cnn - Copy.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="109">
-          <caret line="153" column="54" selection-start-line="153" selection-start-column="45" selection-end-line="153" selection-end-column="54" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/classifierColab.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3502">
-          <caret line="206" column="4" selection-start-line="206" selection-start-column="4" selection-end-line="207" selection-end-column="69" />
+        <state relative-caret-position="272">
+          <caret line="151" column="26" selection-start-line="151" selection-start-column="26" selection-end-line="151" selection-end-column="92" />
           <folding>
-            <element signature="e#0#10#0" expanded="true" />
+            <element signature="e#0#9#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bk/clstm.py">
+    <entry file="file://$PROJECT_DIR$/test.py" />
+    <entry file="file://$PROJECT_DIR$/data/stack-exchange/Psychology/to_sql.py" />
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python37/Lib/site-packages/mysql/connector/connection.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="80" column="8" lean-forward="true" selection-start-line="80" selection-start-column="8" selection-end-line="80" selection-end-column="53" />
+        <state relative-caret-position="133">
+          <caret line="395" selection-start-line="395" selection-end-line="395" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/stack-exchange/Test/Parenting.csv" />
+    <entry file="file://$PROJECT_DIR$/data/stack-exchange/Astronomy/to_sql.py" />
+    <entry file="file://$PROJECT_DIR$/data/stack-exchange/Test - 2/to_sql.py" />
+    <entry file="file://$PROJECT_DIR$/classifierColab.py" />
+    <entry file="file://$PROJECT_DIR$/cnn - Copy.py" />
+    <entry file="file://$PROJECT_DIR$/bk/lstm_attention.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2193">
+          <caret line="6" selection-start-line="6" selection-end-line="14" selection-end-column="57" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/trec.json">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/stack-exchange/WordPress.csv" />
+    <entry file="file://$PROJECT_DIR$/data/test.json" />
+    <entry file="file://$PROJECT_DIR$/vdcnn.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="258">
+          <caret line="246" column="63" selection-start-line="246" selection-start-column="63" selection-end-line="246" selection-end-column="63" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/stack-exchange/to_sql.py" />
+    <entry file="file://$PROJECT_DIR$/data/stack-exchange/Photography/Photography.csv">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/faq/to_sql.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="646">
+          <caret line="40" column="9" selection-start-line="40" selection-start-column="9" selection-end-line="40" selection-end-column="9" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/stack-exchange/Photography/to_sql.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="539">
+          <caret line="108" column="13" selection-start-line="108" selection-start-column="13" selection-end-line="108" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/original_classifier.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2822">
+          <caret line="183" column="27" selection-start-line="183" selection-start-column="27" selection-end-line="183" selection-end-column="27" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/stack-exchange/Personal Finance/to_sql.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="12" column="49" selection-start-line="12" selection-start-column="49" selection-end-line="12" selection-end-column="49" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/trec/trec_db.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="77" selection-start-line="77" selection-end-line="77" />
+          <folding>
+            <element signature="e#215#239#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/stack-exchange/test/to_sql.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wmd.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="10" column="41" selection-start-line="10" selection-start-column="41" selection-end-line="10" selection-end-column="41" />
+          <folding>
+            <element signature="e#0#51#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/stack-exchange/compiled/to_sql.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="459">
+          <caret line="27" column="9" selection-start-line="27" selection-start-column="9" selection-end-line="27" selection-end-column="13" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sample.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="267">
+          <caret line="81" column="24" selection-start-line="81" selection-start-column="24" selection-end-line="81" selection-end-column="24" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>
@@ -531,8 +637,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/classifier.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="876">
-          <caret line="148" column="12" lean-forward="true" selection-start-line="148" selection-start-column="12" selection-end-line="148" selection-end-column="12" />
+        <state relative-caret-position="119">
+          <caret line="106" column="29" selection-start-line="106" selection-start-column="29" selection-end-line="106" selection-end-column="29" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>

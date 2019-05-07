@@ -1,0 +1,18 @@
+# extends "layout.html"
+
+# block head
+{{ super() }}
+<link rel="stylesheet" ref = "{{ url_for('static', filename = 'styles/index.css') }}" />
+# endblock
+
+# block body
+  # for row in rows:
+   <h4>{{ row[0] }}</h4>
+    # for tag in row[1].split(','):
+      # set tag_link = tag|replace(" ","%20")
+      <a href="{{url_for('view_dataset', label=tag )}}" class="badge badge-primary">{{ tag }}</a>
+    # endfor
+   <hr/>
+
+  # endfor
+# endblock

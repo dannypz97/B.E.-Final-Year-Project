@@ -10,19 +10,27 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 classifier = None
 model = None
 embeddings_index = None
+table = None           #which table is selected in the beginning
+graph = None
 
 @app.route('/',methods=['GET','POST'])
 def index():
+    global table, classifier, model, embeddings_index, graph
+
+    if classifier is None and model is None and embeddings_index is None and graph is None:
+        classifier = SentenceClassifier()
+        model, embeddings_index = classifier.setup_classifier(table, load_saved=1)
+        graph = tf.get_default_graph()
+
     if request.args.get("dataset"):
         table = request.args.get("dataset")
 
         with graph.as_default():
-            global classifier, model, embeddings_index
-            del classifier, model, embeddings_index
+            #global classifier, model, embeddings_index
             classifier = SentenceClassifier()
             model, embeddings_index = classifier.setup_classifier(table)
-
-    return render_template('index.html')
+            graph = tf.get_default_graph()
+    return render_template('index.html', table=table)
 
 @app.route('/classify/', methods=['GET', 'POST'])
 def classify():
@@ -37,59 +45,37 @@ def classify():
 
     with graph.as_default():
         possible_tags = classifier.tag_question(model, question)
-    return render_template('classify.html', question = question, missing_words = missing_words, possible_tags = possible_tags)
+    #print(possible_tags)
+    return render_template('classify.html', question = question, missing_words = missing_words, possible_tags=possible_tags)
 
-@app.route('/question/add/', methods=['GET','POST'])
-def add_questions():
+
+
+@app.route('/data/')
+def view_dataset():
+
     mydb, cursor = classifier.connect_to_db()
-    msg = []
-    if request.method == 'POST':
-        question = str(request.form.get('question'))
-        question = classifier.clean_str(question)
-        tags = str(request.form.get('tags'))
+    print(table)
+    label = request.args.get("label")
+    if label is None:
+        cursor.execute('select distinct(broad_label) from tags where `table` = "' + table + '"')
+        result = cursor.fetchall()
+    else:
+        result = [(label)]
 
-        question_addable = True #can question and tags be added to db
+    rows = []
 
-        if len(question.strip())<10:
-            msg.append("Question should be a minimum of 10 characters.")
-            question_addable = False
-        if len(tags.strip())==0:
-            msg.append("No tags were specified.")
-            question_addable = False
-
-        if question_addable is True:
-            sql = "INSERT INTO " + table + "(question, tags) VALUES (%s, %s)"
-            print(question, tags)
-            cursor.execute(sql, (question, tags))
-            mydb.commit()
-
-            lemmatizer = WordNetLemmatizer()
-            #check for word missing in vocab
-            for word in question.split(' '):
-                if lemmatizer.lemmatize(word) not in embeddings_index:
-                    msg.append(word + " not in vocabulary.")
-            msg.append("Question added to database.")
-
-    cursor.execute("select tags from " + table)
-    tags = list(tag for tag in cursor.fetchall())
-
-    processed_tags = set()
-
-    for ele in tags:
-        if ',' not in ele[0]:
-            processed_tags.add(ele[0])
+    for row in result:
+        if label is None:
+            cursor.execute('select question, tags from ' + table + ' where tags like "%' + row[0] + '%" limit 1000')
         else:
-            for tag in ele[0].split(','):
-                processed_tags.add(tag.strip())
+            cursor.execute('select question, tags from ' + table + ' where tags like "%' + row + '%" ')
+        for element in cursor.fetchall():
+            rows.append(element)
 
-    return render_template('add.html', embeddings_index = embeddings_index, tags = processed_tags, msg=msg)
-
-
+    del mydb, cursor
+    return render_template('data.html', rows = rows)
 
 
 if __name__ == '__main__':
-    table = 'trec' #Which dataset to use. Default is 'TREC-6'
-    graph = tf.get_default_graph()
-    classifier = SentenceClassifier()
-    model, embeddings_index = classifier.setup_classifier(table)
-    app.run(debug=True)
+    table = 'trec'
+    app.run(debug=True, threaded=True)
